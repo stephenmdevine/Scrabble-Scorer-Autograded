@@ -35,11 +35,20 @@ function oldScrabbleScorer(word) {
 function initialPrompt() {
    console.log("Let's play some scrabble!\n");
    let word = input.question("Enter a word to score: ");
+   //wordCheck uses validateInput function to ensure user input contains only letters
+   let wordCheck = validateInput(word);
+   while (wordCheck) {
+      word = input.question("Enter a word using only letters: ");
+      wordCheck = validateInput(word);
+   }
    return word;
 };
 
+//newPointStructure replaces oldPointScorer to more efficiently calculate point values
 let newPointStructure = transform(oldPointStructure);
+newPointStructure[" "] = 0;   //adds whitespace to the score with a value of 0
 
+//simpleScorer counts individual characters to score an input word
 let simpleScorer = function(word) {
    word = word.toUpperCase();
 	let letterPoints = "";
@@ -52,6 +61,7 @@ let simpleScorer = function(word) {
    return totalScore;
 };
 
+//vowelBonusScorer behaves like simpleScorer, but vowels are worth 3 instead of 1
 let vowelBonusScorer = function(word) {
    let vowels = ['A', 'E', 'I', 'O', 'U'];
    word = word.toUpperCase();
@@ -70,6 +80,7 @@ let vowelBonusScorer = function(word) {
    return totalScore;
 };
 
+//scrabbleScorer uses the traditional Scrabble letter values to score the input word
 let scrabbleScorer = function(word) {
    word = word.toLowerCase();
    let ptsScored = 0;
@@ -101,18 +112,20 @@ const scoringAlgorithms = [
    }
 ];
 
+//prompts the user to select one of the three scoring algorithms
 function scorerPrompt() {
    let selection = input.question(`\nSelect which scoring algorithm to use.\n
 0. Simple: One point per character
 1. Bonus Vowels: Vowels are worth 3 points
 2. Scrabble: Standard Scrabble points\n
 Enter 0, 1, or 2: `);
-   while (selection < 0 || selection > 3) {
+   while (selection < 0 || selection > 2) {
       selection = input.question("Select either 0, 1, or 2: ");
    }
    return scoringAlgorithms[selection];
 }
 
+//transforms an object with point values as the key into an object with letters as the key
 function transform(oldPoints) {
    let newPoints = {};
    let char = "";
@@ -124,6 +137,18 @@ function transform(oldPoints) {
    }
    return newPoints;
 };
+
+//function to validate that an input word contains only letters (or whitespace)
+function validateInput(word) {
+   let alpha = ' abcdefghijklmnopqrstuvwxyz';
+  word = word.toLowerCase();
+  for (let i = 0; i < word.length; i++) {
+    if (alpha.match(word[i]) === null) {
+      return true;
+    }
+  }
+  return false;
+}
 
 function runProgram() {
    let word = initialPrompt();
