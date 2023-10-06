@@ -102,11 +102,11 @@ const scoringAlgorithms = [
 ];
 
 function scorerPrompt() {
-   let selection = input.question(`\nSelect which scoring algorithm to use.
-   0. Simple: One point per character
-   1. Bonus Vowels: Vowels are worth 3 points
-   2. Scrabble: Standard Scrabble points
-   Enter 0, 1, or 2: `);
+   let selection = input.question(`\nSelect which scoring algorithm to use.\n
+0. Simple: One point per character
+1. Bonus Vowels: Vowels are worth 3 points
+2. Scrabble: Standard Scrabble points\n
+Enter 0, 1, or 2: `);
    while (selection < 0 || selection > 3) {
       selection = input.question("Select either 0, 1, or 2: ");
    }
